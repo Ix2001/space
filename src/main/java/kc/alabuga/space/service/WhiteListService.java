@@ -1,6 +1,5 @@
 package kc.alabuga.space.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +44,18 @@ public class WhiteListService {
         return jdbcTemplate.queryForList(
                 "SELECT ip FROM whitelisted_ips ORDER BY created_at DESC", String.class
         );
+    }
+
+    public String exists(String ip) {
+        ip = ip.trim();
+        List<String> result = jdbcTemplate.queryForList(
+                "SELECT ip FROM whitelisted_ips WHERE ip = ?", String.class, ip
+        );
+
+        if (!result.isEmpty()) {
+            return "IP адрес " + ip + " существует";
+        } else {
+            return "IP адрес " + ip + " не найден";
+        }
     }
 }
